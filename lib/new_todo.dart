@@ -9,7 +9,6 @@ class NewTodo extends StatefulWidget {
 
 class _NewTodoState extends State<NewTodo> {
   TextEditingController controller = TextEditingController();
-  List<String> allStrings = <String>[];
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +22,7 @@ class _NewTodoState extends State<NewTodo> {
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: TextField(
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               hintText: 'New TODO',
               suffixIcon: IconButton(
@@ -33,7 +33,11 @@ class _NewTodoState extends State<NewTodo> {
             controller: controller,
             onSubmitted: (String value) {
               setState(() {
-                allStrings.add(value);
+                if (!mounted) return;
+                final snackBar = SnackBar(
+                  content: Text('TODO: $value.'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 Navigator.pop(context, value);
                 controller.clear();
               });

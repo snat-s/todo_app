@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class ListAll extends StatelessWidget {
   const ListAll({super.key, required this.listOfTasks, required this.title});
-  final Set<String> listOfTasks;
+
+  final List<String> listOfTasks;
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,11 +22,12 @@ class ListAll extends StatelessWidget {
                 ),
               ),
             )
-          : ListView(
+          : ListView.builder(
               padding: const EdgeInsets.all(10),
-              children: listOfTasks.map((text) {
-                return ListTile(title: Text(text));
-              }).toList(),
+              itemCount: listOfTasks.length,
+              itemBuilder: ((context, index) => ListTile(
+                    title: Text(listOfTasks[index]),
+                  )),
             ),
     );
   }

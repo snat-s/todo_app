@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'new_todo.dart';
 import 'specific_todo.dart';
 import 'list_all.dart';
 
 void main(List<String> args) {
-  runApp(const App());
+  runApp(const MyApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +35,9 @@ class Todo extends StatefulWidget {
 
 class _TodoState extends State<Todo> {
   final PageController controller = PageController();
-
   final List<String> _todoTexts = <String>[];
-  final List<bool> _markedDone = List<bool>.filled(
-      1000, false); // so this makes it work to 1000 after that it should break
+  // so this makes it work to 1000 after that it should break
+  final List<bool> _markedDone = List<bool>.filled(1000, false);
   final _todo = <String>{};
   final _done = <String>{};
 
@@ -75,19 +75,13 @@ class _TodoState extends State<Todo> {
                         _specificTodo(index);
                       },
                       trailing: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.black,
-                        ),
                         onPressed: () {
                           setState(() {
                             if (!_markedDone[index]) {
                               _todo.remove(_todoTexts[index]);
-                              _todoTexts[index] = 'DONE: ${_todoTexts[index]}';
                               _done.add(_todoTexts[index]);
                             } else {
                               _done.remove(_todoTexts[index]);
-                              _todoTexts[index] = _todoTexts[index]
-                                  .replaceAll(RegExp(r'DONE: '), '');
                               _todo.add(_todoTexts[index]);
                             }
                             _markedDone[index] = !_markedDone[index];
@@ -108,10 +102,10 @@ class _TodoState extends State<Todo> {
           ),
         ),
         ListAll(
-          listOfTasks: _todo,
+          listOfTasks: _todo.toList(),
           title: 'TODO',
         ),
-        ListAll(listOfTasks: _done, title: 'DONE'),
+        ListAll(listOfTasks: _done.toList(), title: 'DONE'),
       ],
     );
   }
@@ -119,7 +113,9 @@ class _TodoState extends State<Todo> {
   void _pushNewTodo() async {
     //Make a new Todo
     final result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const NewTodo()));
+      context,
+      MaterialPageRoute(builder: (context) => const NewTodo()),
+    );
 
     setState(() {
       _todoTexts.add(result);
@@ -127,7 +123,7 @@ class _TodoState extends State<Todo> {
     });
   }
 
-  _specificTodo(index) {
+  void _specificTodo(index) {
     // View a specific todo
     int i = index + 1;
     Navigator.push(
